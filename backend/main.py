@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 from pydantic import BaseModel
 from typing import Optional
 import requests
+import os
+from openai import OpenAI
 
 load_dotenv()
 
@@ -65,20 +67,36 @@ Rules:
 
 User Question: {req.message}
 """
-    try:
-        response = requests.post(
-            OLLAMA_URL,
-            json={
-                "model": "llama3",
-                "prompt": prompt,
-                "stream": False
+    # ── Check if we are routing to Cloud (OpenAI) or Local (Ollama) ──
+    if os.getenv("OPENAI_API_KEY"):
+        try:
+            client = OpenAI()
+            response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": prompt},
+                    {"role": "user", "content": req.message}
+                ]
+            )
+            return {"reply": response.choices[0].message.content}
+        except Exception as e:
+            return {"reply": f"Cloud AI Error: {str(e)}"}
+    else:
+        # Fallback to local Ollama
+        try:
+            response = requests.post(
+                OLLAMA_URL,
+                json={
+                    "model": "llama3",
+                    "prompt": prompt,
+                    "stream": False
+                }
+            )
+            data = response.json()
+            return {
+                "reply": data.get("response", "I am having trouble processing that right now.")
             }
-        )
-        data = response.json()
-        return {
-            "reply": data.get("response", "I am having trouble processing that right now.")
-        }
-    except Exception:
-        return {
-            "reply": "Sorry, my local AI engine seems to be offline. Make sure Ollama is running."
-        }
+        except Exception:
+            return {
+                "reply": "Sorry, my local AI engine seems to be offline. Provide an OPENAI_API_KEY to use cloud AI, or make sure Ollama is running natively."
+            }

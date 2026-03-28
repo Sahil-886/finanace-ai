@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useUser } from "@/context/UserContext";
 import { Sparkles, RefreshCw, ArrowRight, Download } from "lucide-react";
 
-const API = "http://localhost:8000";
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 export default function Dashboard() {
   const { user, isHydrated, refreshUser, isSimpleMode } = useUser();

@@ -10,7 +10,7 @@ import {
   Home, Landmark, Heart, ChevronDown, ChevronUp, CheckCircle2, AlertCircle,
 } from "lucide-react";
 
-const API = "http://localhost:8000";
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 // ── Colour palette ────────────────────────────────────────────────────────────
 const CLR_A    = "#002753";
