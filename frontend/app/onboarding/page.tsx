@@ -30,7 +30,7 @@ export default function Onboarding() {
       const user_id = localStorage.getItem("user_id");
       if (user_id) {
         const payload = { user_id: user_id, ...formData };
-        const res = await fetch("${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/user/save-data", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/user/save-data`, {
            method: "POST",
            headers: { "Content-Type": "application/json" },
            body: JSON.stringify(payload)
