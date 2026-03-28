@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tax</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="p-10 bg-[#f7f9fb]">
+
+    <h1 class="text-4xl font-bold mb-6">Tax Calculator</h1>
+
+    <input id="salary" placeholder="Salary" class="border p-2 mb-3 w-full">
+
+    <button onclick="tax()" class="bg-green-600 text-white px-4 py-2">
+        Calculate Tax
+    </button>
+
+    <p id="out" class="mt-4"></p>
+
+    <script>
+        function tax() {
+            let s = document.getElementById("salary").value;
+
+            let t = s * 0.2;
+
+            document.getElementById("out").innerText =
+                "Tax: ₹" + t;
+        }
+    </script>
+
+</body>
+</html>

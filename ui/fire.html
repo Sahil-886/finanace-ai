@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FIRE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="p-10 bg-[#f7f9fb]">
+
+    <h1 class="text-4xl font-bold mb-6">FIRE Planner</h1>
+
+    <div class="bg-white p-6 rounded">
+
+        <input id="income" placeholder="Income" class="border p-2 mb-3 w-full">
+        <input id="expense" placeholder="Expenses" class="border p-2 mb-3 w-full">
+
+        <button onclick="calc()" class="bg-blue-600 text-white px-4 py-2">
+            Calculate
+        </button>
+
+        <p id="result" class="mt-4 text-lg"></p>
+
+    </div>
+
+    <script>
+        function calc() {
+            let income = document.getElementById("income").value;
+            let expense = document.getElementById("expense").value;
+            let sip = income - expense;
+
+            document.getElementById("result").innerText =
+                "Monthly Investment: ₹" + sip;
+        }
+    </script>
+
+</body>
+</html>

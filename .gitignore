@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+backend/.venv/
+venv/
+env/
+.env
+
+# Frontend (Node.js/Next.js)
+node_modules/
+.next/
+out/
+build/
+.pnp
+.pnp.js
+coverage/
+.vercel
+**.DS_Store
+*.local
+
+# Database
+*.sqlite
+*.sqlite3
+*.db
+backend/finance_ai.db
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# AI Tooling
+.gemini/
