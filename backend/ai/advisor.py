@@ -1,12 +1,20 @@
 import os
 from openai import OpenAI
+from dotenv import load_dotenv
 
-# Initialize only if key is available so app doesn't crash on import
-client = None
-if os.getenv("OPENAI_API_KEY"):
-    client = OpenAI()
+load_dotenv()
+
+# Lazy client — initialized on first call so env is already loaded
+_client = None
+
+def _get_client():
+    global _client
+    if _client is None and os.getenv("OPENAI_API_KEY"):
+        _client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+    return _client
 
 def get_advice(message: str, financial_context: dict = None) -> str:
+    client = _get_client()
     if not client:
         return "OpenAI API Key not set. Missing structured AI advice."
 
