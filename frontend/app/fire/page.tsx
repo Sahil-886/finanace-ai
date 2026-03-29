@@ -1,14 +1,30 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useUser } from "@/context/UserContext";
 import { api, FireResult } from "@/lib/api";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from "recharts";
 import { Calculator, Target, IndianRupee, WalletCards, ArrowRight, Flame, Zap, ArrowDown } from "lucide-react";
 
 export default function FirePage() {
+  const { user } = useUser();
   const [data, setData] = useState({ age: 28, retirement_age: 45, income: 150000, expenses: 60000, savings: 500000 });
   
   const [baseResult, setBaseResult] = useState<FireResult | null>(null);
   const [loading, setLoading] = useState(false);
+  const [calculating, setCalculating] = useState(false);
+
+  // Sync with User Context on mount
+  useEffect(() => {
+    if (user) {
+      setData({
+        age: parseInt(user.age || "28") || 28,
+        retirement_age: 45, // default
+        income: parseFloat(user.income || "150000") || 150000,
+        expenses: parseFloat(user.expenses || "60000") || 60000,
+        savings: parseFloat(user.savings || "500000") || 500000,
+      });
+    }
+  }, [user]);
 
   // Scenario
   const [scenario, setScenario] = useState({ extraSip: 0, delayYears: 0 });
@@ -27,9 +43,10 @@ export default function FirePage() {
     setLoading(false);
   };
 
+  // Full Reactivity: Re-calculate whenever data or scenario changes
   useEffect(() => {
-    if (!baseResult) return;
     const compute = async () => {
+      setCalculating(true);
       try {
         const payload = { 
           ...data, 
@@ -38,13 +55,15 @@ export default function FirePage() {
         };
         const res = await api.fire(payload as any);
         setScenarioResult(res);
+        if (!baseResult) setBaseResult(res); // Initialize base if empty
       } catch (e) {
         // ignore
       }
+      setCalculating(false);
     };
-    const t = setTimeout(compute, 200);
+    const t = setTimeout(compute, 300);
     return () => clearTimeout(t);
-  }, [scenario.extraSip, scenario.delayYears, baseResult]);
+  }, [data.age, data.retirement_age, data.income, data.expenses, data.savings, scenario.extraSip, scenario.delayYears]);
 
   const activeResult = scenarioResult || baseResult;
 
