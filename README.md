@@ -70,4 +70,4 @@ Artha is a premium financial advisory platform designed to move beyond static sp
 
 ---
 
-**Developed with ❤️ for the Hackathon.**
+
